@@ -1,3 +1,4 @@
+    
 <#
     .SYNOPSIS
     Downloads and Expands a GitHub Repository so you can use components in your scripts and have them automatically load
@@ -33,6 +34,7 @@
     Online version: http://www.fabrikam.com/extension.html
 #>
 
+$PSModulePath = ($profile | Split-Path) + "\Modules"
 $GHDLFile = Split-Path $GHDLUri -Leaf
 $Script:PathtoModule = "$PSModulePath\$GHRepo"
 
