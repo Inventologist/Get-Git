@@ -34,6 +34,8 @@
     Online version: http://www.fabrikam.com/extension.html
 #>
 
+$Global:ProgressPreference = 'SilentlyContinue'
+
 $PSModulePath = ($profile | Split-Path) + "\Modules"
 $GHDLFile = Split-Path $GHDLUri -Leaf
 $Script:PathtoModule = "$PSModulePath\$GHRepo"
