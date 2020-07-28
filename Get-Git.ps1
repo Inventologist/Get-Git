@@ -28,10 +28,6 @@
         
     Get-Git.ps1 -GHDLUri https://github.com/Inventologist/SuperLine/archive/master.zip -GHUser Inventologist -GHRepo SuperLine -ForceRefresh Yes
     . $PathtoModule\Public\SuperLine.ps1
-
-
-    .LINK
-    Online version: http://www.fabrikam.com/extension.html
 #>
 
 $Global:ProgressPreference = 'SilentlyContinue'
