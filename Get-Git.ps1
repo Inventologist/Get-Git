@@ -4,7 +4,7 @@ Param (
 [parameter(Mandatory)]$GHDLUri,
 [parameter(Mandatory)][string]$GHUser,
 [parameter(Mandatory)][string]$GHRepo,
-[parameter(Mandatory)][ValidateSet("Yes","No")]$ForceRefresh
+[parameter(Mandatory)]$ForceRefresh
 )
     
 <#
