@@ -1,12 +1,3 @@
-
-Param (
-[parameter()]$PSModulePath = ($profile | Split-Path) + "\Modules",
-[parameter()]$GHDLUri,
-[parameter()][string]$GHUser,
-[parameter()][string]$GHRepo,
-[parameter()]$ForceRefresh
-)
-    
 <#
     .SYNOPSIS
     Downloads and Expands a GitHub Repository so you can use components in your scripts and have them automatically load
