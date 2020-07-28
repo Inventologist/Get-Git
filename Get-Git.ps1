@@ -1,10 +1,10 @@
 
 Param (
 [parameter()]$PSModulePath = ($profile | Split-Path) + "\Modules",
-[parameter(Mandatory)]$GHDLUri,
-[parameter(Mandatory)][string]$GHUser,
-[parameter(Mandatory)][string]$GHRepo,
-[parameter(Mandatory)]$ForceRefresh
+[parameter()]$GHDLUri,
+[parameter()][string]$GHUser,
+[parameter()][string]$GHRepo,
+[parameter()]$ForceRefresh
 )
     
 <#
