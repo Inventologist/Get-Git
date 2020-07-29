@@ -58,7 +58,7 @@
 $Global:ProgressPreference = 'SilentlyContinue'
 
 $PSModulePath = ($profile | Split-Path) + "\Modules"
-IF (!(Test-Path $PSModulePath)) {New-Item -Path $PSModulePath -ItemType Directory -Force}
+IF (!(Test-Path $PSModulePath)) {New-Item -Path $PSModulePath -ItemType Directory -Force | Out-Null}
 $GHDLFile = Split-Path $GHDLUri -Leaf
 $Script:PathToModule = "$PSModulePath\$GHRepo"
 
