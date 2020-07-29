@@ -54,7 +54,7 @@ $Script:PathToModule = "$PSModulePath\$GHRepo"
 
 Function GHDLRepo {
     $GHDLRepo = ""
-    Write-Host "Downloading Repository Zip File for: $GHRepo"
+    Write-Host "Downloading Repository Zip File for: $GHRepo" -f Cyan
     Start-BitsTransfer -Source $GHDLUri -Destination $PSModulePath
     If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHRepoDL = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHRepoDL = "No"}
 }
