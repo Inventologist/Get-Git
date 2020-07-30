@@ -75,8 +75,8 @@ Function GHDLRepo {
 Function GHDLRefresh {
     DO {
         Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"
-        Remove-Item -Path $PSModulePath\$GHRepo -Force -Recurse
-    } UNTIL (!(Test-Path -Path $PSModulePath\$GHRepo))
+        Remove-Item -Path $PathToModule -Force -Recurse
+    } UNTIL (!(Test-Path -Path $PathToModule))
 }
 
 Function GHDLFinalize {
@@ -85,17 +85,17 @@ Function GHDLFinalize {
     $Script:ExpandedDirName = (Get-Item -Path "$PSModulePath\$GHRepo-*").name
 
     Write-Host "Cleanup"
-    Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PSModulePath\$GHRepo
+    Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
     Remove-Item -Path $PSModulePath\$GHDLFile
 }
 
-IF (!(Test-Path -Path $PSModulePath\$GHRepo)) {
+IF (!(Test-Path -Path $PathToModule)) {
     GHDLRepo
     IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
 } ELSE {
     #Repo Exists and ForceRefresh = NO
     IF ($ForceRefresh -eq "No") {
-        Write-Warning "Module already Exists @ $PSModulePath\$GHRepo`nSkipping download"
+        Write-Warning "Module already Exists @ $PathToModule`nSkipping download"
         Start-Sleep 1
         return
     }
