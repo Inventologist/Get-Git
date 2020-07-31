@@ -63,8 +63,6 @@ $GHDLFile = Split-Path $GHDLUri -Leaf
 $UniqueNameforRepoDir = $GHRepo + "-" + $GHUser
 $Script:PathToModule = "$PSModulePath\$UniqueNameforRepoDir"
 
-
-
 Function GHDLRepo {
     $GHDLRepo = ""
     Write-Host "Downloading Repository Zip File for: $GHRepo" -f Cyan
@@ -109,8 +107,18 @@ IF (!(Test-Path -Path $PathToModule)) {
 
 IF (Test-Path $PathToModule\Get-Git.AutoLoad.txt) {
     Write-Host "AutoLoad Command Found" -f DarkGray
-    $CommandToLoad = Get-Content $PathToModule\Get-Git.AutoLoad.txt
-    Invoke-Expression -Command $CommandToLoad
+    
+    $Script:AutoLoadCommands = @()
+    foreach ($line in Get-Content $AutoLoadFile) {
+        if ($line | Select-String -Pattern '^Command: ' -CaseSensitive) {
+            $line = $line -replace 'Command: ',''
+            $Script:AutoLoadCommands += $line
+        }
+    }
+    
+    foreach ($command in $Script:AutoLoadCommands) {
+        Invoke-Expression -Command $command    
+    }
 }
 
 Write-Host ""
