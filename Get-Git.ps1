@@ -89,6 +89,10 @@ Function GHDLFinalize {
     Remove-Item -Path $PSModulePath\$GHDLFile
 }
 
+###############
+# Main Script #
+###############
+
 IF (!(Test-Path -Path $PathToModule)) {
     GHDLRepo
     IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
