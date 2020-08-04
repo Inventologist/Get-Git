@@ -25,12 +25,24 @@
     Renames it without the -master on the end
     
     .PARAMETER PSModulePath
-    Specifies the location to store the modules.
-    
+    Specifies the location to store the modules.  AS of yet, this is a fixed position in the $profile directory.
+    Feel free to change it if you like... be warned, the path you specify has to be in your $env:PSModulePath.
+
     .PARAMETER GHDLUri
     The GitHub Download URI
     Example: https://github.com/Inventologist/SuperLine/archive/master.zip
+           
+    .PARAMETER GHUser
+    User name for the Repo owner.  This is used to give a unique name to the directory.  
+    For example: Superline directory would end up being named: SuperLine-Inventologist
     
+    .PARAMETER GHRepo
+    Repo name.  Required to name directory properly.
+
+    .PARAMETER ForceRefresh
+    Valid values are Yes / No
+    Will activate the refresh functions.  The repo will be downloaded first, and if it is successful, the script will delete the existing Repo and replace it with the downloaded copy.
+
     .INPUTS
     None. You cannot pipe objects to this
     
@@ -48,8 +60,7 @@
     . $PathtoModule\Public\SuperLine.ps1
 
     See further explaination below in regards to the second line (where you load the ps1/psm1)
-
-
+    
     .EXAMPLE
     The second line may NOT be necessary if you have a 'Get-Git.Autoload.txt' file in the repository.  This is not a GitHub standardized file... its something that I created.
     Simply have the content of the file be the command that is used to load it, and the script will find it.
