@@ -18,13 +18,17 @@ Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive
 ```
 
 #### Second Line
+```powershell
 . $PathtoModule\Public\SuperLine.ps1
+```
     
 The second line may NOT be necessary if you have a 'Get-Git.Autoload.txt' file in the repository.  This is not a GitHub standardized file... its something that I created.
 Simply have the content of the file be the command that is used to load it, and the script will find it.
 
 #### So, I only have to use the first line in my script, because SuperLine has the Get-Git.AutoLoad.txt file.
+```powershell
 Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
+```
 
 ## References / Credits
 I've tried a few other scripts... some work, some dont.  The Genesis for the idea came from this article:
