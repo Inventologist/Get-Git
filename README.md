@@ -12,9 +12,18 @@ I'm sure that there are scenarios that I am not catching... please be kind!
 First Line Downloads and executes the script GETS the Repo and stores it in your Modules Directory
 Second Line Dot Sources the script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
     
-#### First Line
+#### First Line (One-Liner)
 ```powershell
 Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
+```
+#### First Line (If you like your code a little more compact/organized)
+```powershell
+Invoke-Expression ('
+$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";
+$GHUser="Inventologist";
+$GHRepo="SuperLine";
+$ForceRefresh="Yes"' + 
+(new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
 ```
 
 #### Second Line
