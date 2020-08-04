@@ -25,10 +25,29 @@ Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive
 The second line may NOT be necessary if you have a 'Get-Git.Autoload.txt' file in the repository.  This is not a GitHub standardized file... its something that I created.
 Simply have the content of the file be the command that is used to load it, and the script will find it.
 
+The Get-Git.AutoLoad.txt file for our example: SuperLine
+```
+#>
+    This file is for Get-Git (and any other program that chooses to use it)
+    The purpose is to serve as a reference point for the command to use to load the 
+    Module/Script so that the main purpose of the function can be utilized.
+
+    Any command that your Repo requires should be listed below starting with "Command: "
+
+    ##Please use $PathToModules when trying to reference the root of where the modules are stored.
+    Example:  If you want SuperLine to be loaded you would put the following : Command: . $PathToModules\pulic\SuperLine.ps1
+
+<#
+
+Command: . $PathtoModule\Public\SuperLine.ps1
+```
+
 #### So, I only have to use the first line in my script, because SuperLine has the Get-Git.AutoLoad.txt file.
 ```powershell
 Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
 ```
+
+
 
 ## References / Credits
 I've tried a few other scripts... some work, some dont.  The Genesis for the idea came from this article:
