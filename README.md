@@ -42,12 +42,12 @@ The Get-Git.AutoLoad.txt file for our example: SuperLine
 Command: . $PathtoModule\Public\SuperLine.ps1
 ```
 
+Get-Git will parse throught the file and grab any line starting with "Command: "  <-- yes you need that extra space after the word "Command".
+
 #### So, I only have to use the first line in my script, because SuperLine has the Get-Git.AutoLoad.txt file.
 ```powershell
 Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
 ```
-
-
 
 ## References / Credits
 I've tried a few other scripts... some work, some dont.  The Genesis for the idea came from this article:
