@@ -13,7 +13,9 @@ First Line Downloads and executes the script GETS the Repo and stores it in your
 Second Line Dot Sources the script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
     
 #### First Line
+```powershell
 Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
+```
 
 #### Second Line
 . $PathtoModule\Public\SuperLine.ps1
