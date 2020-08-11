@@ -51,7 +51,7 @@ The Get-Git.AutoLoad.txt file for our example: SuperLine
 Command: . $PathtoModule\Public\SuperLine.ps1
 ```
 
-Get-Git will parse throught the file and grab any line starting with "Command: "  <-- yes you need that extra space after the word "Command".
+Get-Git will parse throught the file and grab any line starting with "Command: "  <-- yes you need that extra space after "Command:".
 
 #### So, I only have to use the first line in my script, because SuperLine has the Get-Git.AutoLoad.txt file.
 ```powershell
