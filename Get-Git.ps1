@@ -78,8 +78,10 @@ $AutoLoadFile = "$PathToModule\Get-Git.AutoLoad.txt"
 
 Function GHDLRepo {
     $GHDLRepo = ""
-    Write-Host "Downloading Repository Zip File for: $GHRepo" -f Cyan
-    Start-BitsTransfer -Source $GHDLUri -Destination $PSModulePath
+    Write-Host "Downloading required file for: $GHRepo" -f Cyan
+
+    Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
+
     If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHRepoDL = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHRepoDL = "No"}
 }
 
@@ -91,12 +93,24 @@ Function GHDLRefresh {
 }
 
 Function GHDLFinalize {
-    Write-Host "Expanding Repository Zip File"
-    Expand-Archive -Path $PSModulePath\$GHDLFile -DestinationPath $PSModulePath -Force
-    $Script:ExpandedDirName = (Get-Item -Path "$PSModulePath\$GHRepo-*").name
+    # Get extenstion to figure out what neesd to be done with the downloaded file
+    $Extension = $GHDLUri.Split('.')[-1]
 
-    Write-Host "Cleanup"
-    Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
+    Switch ($Extension) {
+        
+        zip {
+            Write-Host "Expanding Repository Zip File"
+            Expand-Archive -Path $PSModulePath\$GHDLFile -DestinationPath $PSModulePath -Force
+            
+            $Script:ExpandedDirName = (Get-Item -Path "$PSModulePath\$GHRepo-*").name
+            Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
+        }
+        
+        default {
+            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination (New-Item -Path ($PathToModule + "\" + $GHDLFile) -Type Directory)
+        }
+    }
+        
     Remove-Item -Path $PSModulePath\$GHDLFile
 }
 
