@@ -107,8 +107,8 @@ Function GHDLFinalize {
         }
         
         default {
-            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination ($PathToModule + "\" + $GHDLFile) -Recurse -Force
-            #Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination (New-Item -Path ($PathToModule + "\" + $GHDLFile) -Type Directory)
+            IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory}
+            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination ($PathToModule + "\" + $GHDLFile)
         }
     }
         
