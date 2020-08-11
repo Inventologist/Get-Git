@@ -108,7 +108,7 @@ Function GHDLFinalize {
         
         default {
             IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory}
-            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination ($PathToModule + "\" + $GHDLFile)
+            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination $PathToModule
         }
     }
         
