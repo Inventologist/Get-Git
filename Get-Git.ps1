@@ -6,23 +6,26 @@
     The idea is that WHEREVER your script goes, it is Self-Contained and Self-Updating as far as its Dependencies
     #############################################################################################################
     
-    It will download and keep current (ForceRefresh = ON) any GitHub Repo you specify.
+    Step 1: It will download and keep current (ForceRefresh = ON) any GitHub Repo you specify.
     
-    ### After the process is done, you will need to MANUALLY Dot-Source a script or Import-Module on the proper item(s) in the Repo to activate it!!
-    I am working on an automatic way to do it... more on that soon.
-    
-    This script DOES NOT make the Functions inside the Repo available for immediate use... it makes them Available to Load into your environment.
-    See Examples in the function comment block
+    Step 2: After the download process is done, you will need to MANUALLY Dot-Source a script or Import-Module on the proper item(s) in the Repo to activate it!!
+    Step 2a: You can have the module automatically load... if you use the Get-Git.AutoLoad.txt file. (see explaination below).
+        
+    In general, this script DOES NOT make the Functions inside the Repo available for immediate use... it makes them Available to Load into your environment.
+
+    It works for both Full repo (.zip) and individual files (.ps1, .psm1, .dll, etc).
+
+    See Examples in the function comment block.
 #>
 
 <#
     .SYNOPSIS
-    Downloads and Expands a GitHub Repository so you can use components in your scripts and have them automatically load them
+    Downloads and Expands a GitHub Repository (or individual file) so you can use components in your scripts.
     
     .DESCRIPTION
-    Downloads a GitHub Repository ZIP file
-    Exapnds the Zip file
-    Renames it without the -master on the end
+    Downloads a GitHub Repository ZIP file or an individual file you specify.
+    Exapnds the Zip file, or copies the individual file, to a unique directory.
+    If it is a full Repo, it renames the directory without the -master on the end.
     
     .PARAMETER PSModulePath
     Specifies the location to store the modules.  AS of yet, this is a fixed position in the $profile directory.
