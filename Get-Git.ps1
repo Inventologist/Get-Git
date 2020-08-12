@@ -114,32 +114,29 @@ Function GHDLRefresh {
         $RemoveItemRetries++
     } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
 
-    IF (!(Test-Path -Path $PathToModule)) {$GHDLRefresh = "Yes"}
+    IF (!(Test-Path -Path $PathToModule)) {$Script:GHDLRefresh = "Yes"}
 
     IF ($RemoveItemRetries -ge 5) {
         Write-Warning "Could not refresh $GHRepo.  Some local Files are in use."
-        $GHDLRefresh = "No"
+        $Script:GHDLRefresh = "No"
     }
 }
 
 Function GHDLFinalize {
     # Get extenstion to figure out what neesd to be done with the downloaded file
     $Extension = $GHDLUri.Split('.')[-1]
-
-    Switch ($Extension) {
         
-        zip {
-            Write-Host "Expanding Repository Zip File"
-            Expand-Archive -Path $PSModulePath\$GHDLFile -DestinationPath $PSModulePath -Force
+    IF ($Extension -eq "zip") {
+        Write-Host "Expanding Repository Zip File"
+        Expand-Archive -Path $PSModulePath\$GHDLFile -DestinationPath $PSModulePath -Force
             
-            $Script:ExpandedDirName = (Get-Item -Path "$PSModulePath\$GHRepo-*").name
-            Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
-        }
-        
-        default {
-            IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory | Out-Null}
-            Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination $PathToModule
-        }
+        $Script:ExpandedDirName = (Get-Item -Path "$PSModulePath\$GHRepo-*").name
+        Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
+    } 
+    
+    IF ($Extension -ne "zip") {
+        IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory | Out-Null}
+        Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination $PathToModule
     }
 }
 
@@ -165,6 +162,7 @@ IF (!(Test-Path -Path $PathToModule)) {
     }
     #Repo Exists and ForceRefresh = Yes
     IF ($ForceRefresh -eq "Yes") {
+        #Write-Host "asdfasdfa";pause
         GHDLFileOrRepo
         IF ($GHRepoDL -eq "Yes") {GHDLRefresh}
         IF (($GHRepoDL -eq "Yes") -AND ($GHDLRefresh -eq "Yes")) {GHDLFinalize}
