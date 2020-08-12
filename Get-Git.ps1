@@ -66,18 +66,30 @@
     Simply have the content of the file be the command that is used to load it, and the script will find it.
 #>
 
+#Prevent all Progress Bars
 $Global:ProgressPreference = 'SilentlyContinue'
 
+#Set the Path to the Modules
 $PSModulePath = ($profile | Split-Path) + "\Modules"
+
+#Create the directory if it does not exist
 IF (!(Test-Path $PSModulePath)) {New-Item -Path $PSModulePath -ItemType Directory -Force | Out-Null}
+
+#Extract the File Name from the $GHDLUri
 $GHDLFile = Split-Path $GHDLUri -Leaf
+
+#Create a unique name for the directory that the module is stored in.  This helps with duplicate Modules/Repo names
+#WARNING: This will prevent you from loading the module(s) by "Import-Module ABC".  Reason: the module directory name has to be the same as the module.  
+#Workaround: You will have to provide the full path to any module that you want to load (that are in these kinds of directories)  You can use $PathToModule (see below)
 $UniqueNameforRepoDir = $GHRepo + "-" + $GHUser
+
+#Create a variable that can be used to give the full path to the module directory
 $Script:PathToModule = "$PSModulePath\$UniqueNameforRepoDir"
 
+#AutoLoad file designation
 $AutoLoadFile = "$PathToModule\Get-Git.AutoLoad.txt"
 
 Function GHDLRepo {
-    $GHDLRepo = ""
     Write-Host "Downloading required file for: $GHRepo" -f Cyan
 
     Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
@@ -118,6 +130,7 @@ Function GHDLFinalize {
 ###############
 # Main Script #
 ###############
+
 
 IF (!(Test-Path -Path $PathToModule)) {
     GHDLRepo
