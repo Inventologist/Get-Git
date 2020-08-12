@@ -108,7 +108,15 @@ Function GHDLRefresh {
     DO {
         Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"
         Remove-Item -Path $PathToModule -Force -Recurse
-    } UNTIL (!(Test-Path -Path $PathToModule))
+        $RemoveItemRetries++
+    } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
+
+    IF (!(Test-Path -Path $PathToModule)) {$GHDLRefresh = "Yes"}
+
+    IF ($RemoveItemRetries -ge 5) {
+        Write-Warning "Could not refresh $GHRepo.  Some local Files are in use."
+        $GHDLRefresh = "No"
+    }
 }
 
 Function GHDLFinalize {
@@ -130,7 +138,9 @@ Function GHDLFinalize {
             Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination $PathToModule
         }
     }
-        
+}
+
+Function GHDLCleanup {
     Remove-Item -Path $PSModulePath\$GHDLFile
 }
 
@@ -139,9 +149,12 @@ Function GHDLFinalize {
 ###############
 
 
+
 IF (!(Test-Path -Path $PathToModule)) {
+    #Repo does NOT exist... Download
     GHDLFileOrRepo
     IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
+    GHDLCleanup
 } ELSE {
     #Repo Exists and ForceRefresh = NO
     IF ($ForceRefresh -eq "No") {
@@ -149,11 +162,12 @@ IF (!(Test-Path -Path $PathToModule)) {
         Start-Sleep 1
         return
     }
-    #Repo does NOT exist and ForceRefresh = Yes
+    #Repo Exists and ForceRefresh = Yes
     IF ($ForceRefresh -eq "Yes") {
         GHDLFileOrRepo
         IF ($GHRepoDL -eq "Yes") {GHDLRefresh}
-        IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
+        IF (($GHRepoDL -eq "Yes") -AND ($GHDLRefresh -eq "Yes")) {GHDLFinalize}
+        GHDLCleanup
     }
 }
 
