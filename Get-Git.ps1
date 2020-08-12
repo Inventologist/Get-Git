@@ -53,15 +53,19 @@
     You do not need THIS script locally, or THIS code.  See the explaination below.  I have worked this out so it can be called with a one-liner.
     
     Example of what I use in my scripts to call this script and download other Repos
-    First Line Downloads and executes the script GETS the Repo and stores it in your Modules Directory
-    Second Line Dot Sources the script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
     
+    #FIRST LINE: First Line Downloads and executes the script GETS the Repo and stores it in your Modules Directory
+    #SECOND LINE: Second Line Dot Sources the psm1/script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
+    
+    ##FIRST LINE EXAMPLE
     Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine";$ForceRefresh = "Yes"' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
+    
+    ##SECOND LINE EXAMPLE
     . $PathtoModule\Public\SuperLine.ps1
 
     See further explaination below in regards to the second line (where you load the ps1/psm1)
     
-    .EXAMPLE
+    .EXAMPLE (Second Line)
     The second line may NOT be necessary if you have a 'Get-Git.Autoload.txt' file in the repository.  This is not a GitHub standardized file... its something that I created.
     Simply have the content of the file be the command that is used to load it, and the script will find it.
 #>
