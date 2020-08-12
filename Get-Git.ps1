@@ -100,8 +100,8 @@ Function GHDLFileOrRepo {
     Write-Host "Downloading required file for: $GHRepo" -f Cyan
 
     Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
-
-    If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHRepoDL = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHRepoDL = "No"}
+GHDLSuccessful
+    If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHDLSuccessful = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHDLSuccessful = "No"}
 }
 
 Function GHDLRefresh {
@@ -114,18 +114,19 @@ Function GHDLRefresh {
         $RemoveItemRetries++
     } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
 
-    IF (!(Test-Path -Path $PathToModule)) {$Script:GHDLRefresh = "Yes"}
+    IF (!(Test-Path -Path $PathToModule)) {$Script:GHDLRefreshSuccessful = "Yes"}
 
     IF ($RemoveItemRetries -ge 5) {
         Write-Warning "Could not refresh $GHRepo.  Some local Files are in use."
-        $Script:GHDLRefresh = "No"
+        $Script:GHDLRefreshSuccessful = "No"
     }
 }
 
 Function GHDLFinalize {
     # Get extenstion to figure out what neesd to be done with the downloaded file
     $Extension = $GHDLUri.Split('.')[-1]
-        
+    
+    #Scenario for ZIP file
     IF ($Extension -eq "zip") {
         Write-Host "Expanding Repository Zip File"
         Expand-Archive -Path $PSModulePath\$GHDLFile -DestinationPath $PSModulePath -Force
@@ -134,6 +135,7 @@ Function GHDLFinalize {
         Rename-Item -Path $PSModulePath\$ExpandedDirName -NewName $PathToModule
     } 
     
+    #Scenario for all others
     IF ($Extension -ne "zip") {
         IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory | Out-Null}
         Write-Host "Moving file to Repo Directory"        
@@ -152,7 +154,7 @@ Function GHDLCleanup {
 IF (!(Test-Path -Path $PathToModule)) {
     #Repo does NOT exist... Download
     GHDLFileOrRepo
-    IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
+    IF ($GHDLSuccessful -eq "Yes") {GHDLFinalize}
     GHDLCleanup
 } ELSE {
     #Repo Exists and ForceRefresh = NO
@@ -164,9 +166,9 @@ IF (!(Test-Path -Path $PathToModule)) {
     #Repo Exists and ForceRefresh = Yes
     IF ($ForceRefresh -eq "Yes") {
         #Write-Host "asdfasdfa";pause
-        GHDLFileOrRepo
-        IF ($GHRepoDL -eq "Yes") {GHDLRefresh}
-        IF (($GHRepoDL -eq "Yes") -AND ($GHDLRefresh -eq "Yes")) {GHDLFinalize}
+        GHDLFileOrRepo #Get the File or Repo
+        IF ($GHDLSuccessful -eq "Yes") {GHDLRefresh} #Refresh Repo ONLY if the Download was successful
+        IF (($GHDLSuccessful -eq "Yes") -AND ($GHDLRefreshSuccessful -eq "Yes")) {GHDLFinalize} #Finalize Repo ONLY if the Refresh was successful
         GHDLCleanup
     }
 }
