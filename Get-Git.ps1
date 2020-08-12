@@ -100,7 +100,7 @@ Function GHDLFileOrRepo {
     Write-Host "Downloading required file for: $GHRepo" -f Cyan
 
     Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
-GHDLSuccessful
+
     If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHDLSuccessful = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHDLSuccessful = "No"}
 }
 
