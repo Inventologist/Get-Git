@@ -93,7 +93,7 @@ $Script:PathToModule = "$PSModulePath\$UniqueNameforRepoDir"
 #AutoLoad file designation
 $AutoLoadFile = "$PathToModule\Get-Git.AutoLoad.txt"
 
-Function GHDLRepo {
+Function GHDLFileOrRepo {
     Write-Host "Downloading required file for: $GHRepo" -f Cyan
 
     Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
@@ -137,7 +137,7 @@ Function GHDLFinalize {
 
 
 IF (!(Test-Path -Path $PathToModule)) {
-    GHDLRepo
+    GHDLFileOrRepo
     IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
 } ELSE {
     #Repo Exists and ForceRefresh = NO
@@ -148,7 +148,7 @@ IF (!(Test-Path -Path $PathToModule)) {
     }
     #Repo does NOT exist and ForceRefresh = Yes
     IF ($ForceRefresh -eq "Yes") {
-        GHDLRepo
+        GHDLFileOrRepo
         IF ($GHRepoDL -eq "Yes") {GHDLRefresh}
         IF ($GHRepoDL -eq "Yes") {GHDLFinalize}
     }
