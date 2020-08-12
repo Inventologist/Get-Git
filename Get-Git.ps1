@@ -105,8 +105,11 @@ Function GHDLFileOrRepo {
 }
 
 Function GHDLRefresh {
+    
+    $RemoveItemRetries = 1
+
     DO {
-        Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"
+        IF ($RemoveItemRetries -eq 1) {Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"}
         Remove-Item -Path $PathToModule -Force -Recurse -ErrorAction SilentlyContinue
         $RemoveItemRetries++
     } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
