@@ -107,7 +107,7 @@ Function GHDLFileOrRepo {
 Function GHDLRefresh {
     DO {
         Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"
-        Remove-Item -Path $PathToModule -Force -Recurse
+        Remove-Item -Path $PathToModule -Force -Recurse | Out-Null
         $RemoveItemRetries++
     } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
 
@@ -147,8 +147,6 @@ Function GHDLCleanup {
 ###############
 # Main Script #
 ###############
-
-
 
 IF (!(Test-Path -Path $PathToModule)) {
     #Repo does NOT exist... Download
