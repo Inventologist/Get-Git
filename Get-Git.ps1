@@ -136,6 +136,7 @@ Function GHDLFinalize {
     
     IF ($Extension -ne "zip") {
         IF (!(Test-Path -path $PathToModule)) {New-Item $PathToModule -Type Directory | Out-Null}
+        Write-Host "Moving file to Repo Directory"        
         Copy-Item ($PSModulePath + "\" + $GHDLFile) -Destination $PathToModule
     }
 }
