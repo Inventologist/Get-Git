@@ -98,25 +98,31 @@ $AutoLoadFile = "$PathToModule\Get-Git.AutoLoad.txt"
 
 Function GHDLFileOrRepo {
     Write-Host "Downloading required file for: $GHRepo" -f Cyan
-
+    
+    #DOWNLOAD File/Repo
     Invoke-WebRequest -Uri $GHDLUri -OutFile $PSModulePath\$GHDLFile
-
-    If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHDLSuccessful = "Yes"} ELSE {Write-Error "Download Failure";$Script:GHDLSuccessful = "No"}
+    
+    #Download Result
+    If (Test-Path -Path $PSModulePath\$GHDLFile) {$Script:GHDLSuccessful = "Yes"} ELSE {$Script:GHDLSuccessful = "No"; Write-Error "Download Failure"}
 }
 
 Function GHDLRefresh {
     
-    $RemoveItemRetries = 1
+    $RemoveItemRetries = 1 #Set Retries to 1
+    $MaxRetries = 5
 
     DO {
-        IF ($RemoveItemRetries -eq 1) {Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"}
+        IF ($RemoveItemRetries -eq 1) {Write-Host "ForceRefresh is ON... Removing local repository for $GHRepo"} #Only write to the screen ONCE, when it first tries to delete.
+        
+        #Remove Repo Directory
         Remove-Item -Path $PathToModule -Force -Recurse -ErrorAction SilentlyContinue
-        $RemoveItemRetries++
+        
+        $RemoveItemRetries++ #Increment retries
     } UNTIL ((!(Test-Path -Path $PathToModule)) -OR ($RemoveItemRetries -ge 5))
 
     IF (!(Test-Path -Path $PathToModule)) {$Script:GHDLRefreshSuccessful = "Yes"}
 
-    IF ($RemoveItemRetries -ge 5) {
+    IF ($RemoveItemRetries -ge $MaxRetries) {
         Write-Warning "Could not refresh $GHRepo.  Some local Files are in use."
         $Script:GHDLRefreshSuccessful = "No"
     }
@@ -144,6 +150,7 @@ Function GHDLFinalize {
 }
 
 Function GHDLCleanup {
+    #Cleanup Downloaded file
     Remove-Item -Path $PSModulePath\$GHDLFile
 }
 
@@ -153,9 +160,9 @@ Function GHDLCleanup {
 
 IF (!(Test-Path -Path $PathToModule)) {
     #Repo does NOT exist... Download
-    GHDLFileOrRepo
-    IF ($GHDLSuccessful -eq "Yes") {GHDLFinalize}
-    GHDLCleanup
+    GHDLFileOrRepo #Get the File or Repo
+    IF ($GHDLSuccessful -eq "Yes") {GHDLFinalize} #Finalize Repo ONLY if the Refresh was successful
+    IF ($GHDLSuccessful -eq "Yes") {GHDLCleanup}
 } ELSE {
     #Repo Exists and ForceRefresh = NO
     IF ($ForceRefresh -eq "No") {
@@ -165,29 +172,27 @@ IF (!(Test-Path -Path $PathToModule)) {
     }
     #Repo Exists and ForceRefresh = Yes
     IF ($ForceRefresh -eq "Yes") {
-        #Write-Host "asdfasdfa";pause
         GHDLFileOrRepo #Get the File or Repo
         IF ($GHDLSuccessful -eq "Yes") {GHDLRefresh} #Refresh Repo ONLY if the Download was successful
         IF (($GHDLSuccessful -eq "Yes") -AND ($GHDLRefreshSuccessful -eq "Yes")) {GHDLFinalize} #Finalize Repo ONLY if the Refresh was successful
-        GHDLCleanup
+        IF ($GHDLSuccessful -eq "Yes") {GHDLCleanup}
     }
 }
 
 IF (Test-Path $AutoLoadFile) {
     Write-Host "AutoLoad Command Found" -f DarkGray
     
-
-    $Script:AutoLoadCommands = @()
+    $Script:AutoLoadCommands = @() #Prep Array
     foreach ($line in Get-Content $AutoLoadFile) {
         if ($line | Select-String -Pattern '^Command: ' -CaseSensitive) {
-            $line = $line -replace 'Command: ',''
-            $Script:AutoLoadCommands += $line
+            $line = $line -replace 'Command: ','' #Replace "Command: " so that all is left is the command itself
+            $Script:AutoLoadCommands += $line #Add $line (containing command) to AutoLoadCommands array
         }
     }
     
     foreach ($command in $Script:AutoLoadCommands) {
-        Invoke-Expression -Command $command    
+        Invoke-Expression -Command $command #Run each command in the AutoLoadCommands array
     }
 }
 
-Write-Host ""
+Write-Host "" #Extra line to make demark point between Dependecy Prep and the main script that is using Get-Git
