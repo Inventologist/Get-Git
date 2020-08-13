@@ -9,8 +9,8 @@ I'm sure that there are scenarios that I am not catching... please be kind!
 #### Get in touch when you find something wrong.
 
 ## Usage
-First Line Downloads and executes the script GETS the Repo and stores it in your Modules Directory
-Second Line Dot Sources the script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
+**First Line:** Downloads and executes the script GETS the Repo and stores it in your Modules Directory.</br>
+**Second Line:** Dot Sources the script necessary to access the function (If it were a PSM1 file you would use: Import-Module $PathtoModule\NameOfPSMFile.psm1)
     
 #### First Line (One-Liner)
 ```powershell
