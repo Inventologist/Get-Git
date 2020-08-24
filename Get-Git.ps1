@@ -195,4 +195,7 @@ IF (Test-Path $AutoLoadFile) {
     }
 }
 
+#Variable Cleanup
+"GHDLUri","GHUser","GHRepo","ForceRefresh" | ForEach-Object {Remove-Variable -Name $_}
+
 Write-Host "" #Extra line to make demark point between Dependecy Prep and the main script that is using Get-Git
