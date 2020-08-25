@@ -28,6 +28,15 @@ $GHRepo="SuperLine";
 $ForceRefresh="Yes"' + 
 (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
 ```
+#### Another way to use the First Line (to make it act differently in either Console or ISE)
+```powershell
+Invoke-Expression ('$GHDLUri="https://github.com/Inventologist/SuperLine/archive/master.zip";$GHUser="Inventologist";$GHRepo="SuperLine";IF ($host.Name -eq "Consolehost") {$ForceRefresh = "No"} ELSE {$ForceRefresh = "Yes"}' + (new-object net.webclient).DownloadString('https://raw.githubusercontent.com/Inventologist/Get-Git/master/Get-Git.ps1'))
+```
+The difference is letting this snippet:
+```powershell
+IF ($host.Name -eq "Consolehost") {$ForceRefresh = "No"} ELSE {$ForceRefresh = "Yes"}
+```
+Do the deciding on whether to ForceRefresh.  This lets your scripts run faster when they are run through powershell, but also lets them more frequently update when you are using them in ISE.  I can also put some code in there to deal with VSCode if anyone would like.
 
 #### Second Line
 ```powershell
