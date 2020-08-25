@@ -4,7 +4,7 @@ Small script to download a Git repository, so that when others use your script, 
 ## Backstory
 I try to really use the repositories that I post here.  So, you can imagine that my scripts are completely intertwined.
 
-Well, they ARE when **I** use them, but not here.  Here they were separated.  The problem has been... finding as easy way to retrieve a GitHub script/Repo that is a dependency.
+Well, they ARE when **I** use them, but not here.  Here, they were mostly separated.  The problem has been... finding as easy way to retrieve a GitHub script/Repo that is a dependency.
 
 Previously, I would simply include the accessory function INSIDE of the script.  I desparately wanted some "Built-In" way to get and load a repository... just like the Powershell Gallery.  So, I embarked on this journey.
 
