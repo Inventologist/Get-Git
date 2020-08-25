@@ -179,6 +179,7 @@ IF (!(Test-Path -Path $PathToModule)) {
     }
 }
 
+#Check for AutoLoad
 IF (Test-Path $AutoLoadFile) {
     Write-Host "AutoLoad Command Found" -f DarkGray
     
